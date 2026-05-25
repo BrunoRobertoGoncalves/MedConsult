@@ -12,6 +12,8 @@ namespace Domain.AggregatesModel.ExamAggregate
         public string StoragePath { get; private set; }
         public ExamType Type { get; private set; }
         public DateTime CreatedAt { get; private set; }
+        public string? ExtractedData { get; private set; }
+        public string? AlteredValues { get; private set; }
         public ExamProcessingStatus ProcessingStatus { get; private set; }
 
         private Exam() { }
@@ -50,6 +52,47 @@ namespace Domain.AggregatesModel.ExamAggregate
 
 
             return new Exam(uploadedByUserId, fileName, fileSize, storagePath, type);
+        }
+            
+        public void UpdateFileName(string newFileName)
+        {
+            if(string.IsNullOrWhiteSpace(newFileName))
+                throw new DomainException("FileName cannot be empty.");
+
+            FileName = newFileName;
+        }
+
+        public void StartProcessing()
+        {
+            if (ProcessingStatus != ExamProcessingStatus.Pending)
+                throw new DomainException("Only exams with Pending status can be processed.");
+
+            ProcessingStatus = ExamProcessingStatus.Processing;
+        }
+
+        public void CompleteProcessing(string extractedData, string alteredValues)
+        {
+            if (ProcessingStatus != ExamProcessingStatus.Processing)
+                throw new DomainException("Only exams with Processing status can be completed.");
+
+            if(string.IsNullOrWhiteSpace(extractedData))
+                throw new DomainException("ExtractedData cannot be empty.");
+
+            if(string.IsNullOrWhiteSpace(alteredValues))
+                throw new DomainException("AlteredValues cannot be empty.");
+
+            ExtractedData = extractedData;
+            AlteredValues = alteredValues;
+
+            ProcessingStatus = ExamProcessingStatus.Completed;
+        }
+
+        public void FailProcessing()
+        {
+            if (ProcessingStatus != ExamProcessingStatus.Processing)
+                throw new DomainException("Only exams with Processing status can be marked as failed.");
+
+            ProcessingStatus = ExamProcessingStatus.Failed;
         }
 
     }
