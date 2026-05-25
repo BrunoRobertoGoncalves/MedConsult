@@ -12,6 +12,4 @@ namespace Domain.Exceptions
             : base(message, innerException)
         { }
     }
-
-    Exam
 }
