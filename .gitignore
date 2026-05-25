@@ -1,0 +1,3 @@
+echo ".vs/"
+echo "*/obj/"
+echo "*/bin/"
