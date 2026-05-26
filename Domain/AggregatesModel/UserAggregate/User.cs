@@ -5,7 +5,7 @@ using Domain.ValueObjects;
 
 namespace Domain.AggregatesModel.UserAggregate
 {
-    public class User : Entity<Guid>
+    public class User : Entity<Guid>, IAggregateRoot
     {
         public string Name { get; private set; }
         public Email Email { get; private set; }

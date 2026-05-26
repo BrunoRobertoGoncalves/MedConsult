@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Domain.AggregatesModel.ClinicalCaseAggregate.Repository
 {
-    internal interface IClinicalCaseRepository : IRepository<ClinicalCase, Guid>
+    public interface IClinicalCaseRepository : IRepository<ClinicalCase, Guid>
     {
     }
 }

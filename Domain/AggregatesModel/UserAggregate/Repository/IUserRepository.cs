@@ -2,7 +2,7 @@
 
 namespace Domain.AggregatesModel.UserAggregate.Repository
 {
-    internal interface IUserRepository : IRepository<User, Guid>
+    public interface IUserRepository : IRepository<User, Guid>
     {
     }
 }
