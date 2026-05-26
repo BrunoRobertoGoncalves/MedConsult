@@ -2,6 +2,7 @@
   <Folder Name="/Solution Items/">
     <File Path=".gitignore" />
   </Folder>
+  <Project Path="API/API.csproj" Id="3811ea4e-25a4-4793-b208-71cb41501997" />
   <Project Path="Domain/Domain.csproj" />
   <Project Path="Infraestructure/Infraestructure.csproj" />
 </Solution>
