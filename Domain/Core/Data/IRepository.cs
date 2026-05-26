@@ -4,10 +4,11 @@
         where TEntity : class 
         where TKey : struct
     {
-        void Add(TEntity obj);
-        void Update(TEntity obj);
+        Task Add(TEntity obj);
+        Task Update(TEntity obj);
         TEntity GetById(TKey id);
         Task<TEntity> GetByIdAsync(TKey id);
         IQueryable<TEntity> GetAll();
+        IUnitOfWork UnitOfWork { get; }
     }
 }
