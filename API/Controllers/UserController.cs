@@ -35,7 +35,7 @@ namespace API.Controllers
         }
 
         [HttpPut]
-        [Route("{Id:int}/disable")]
+        [Route("{Id:guid}/disable")]
         [ProducesResponseType((int)HttpStatusCode.Created)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> Disable(Guid Id)
@@ -52,7 +52,7 @@ namespace API.Controllers
         }
 
         [HttpPut]
-        [Route("{Id:int}/enable")]
+        [Route("{Id:guid}/enable")]
         [ProducesResponseType((int)HttpStatusCode.Created)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> Enable(Guid Id)
