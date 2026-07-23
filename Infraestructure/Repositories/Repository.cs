@@ -25,9 +25,10 @@ namespace Infraestructure.Repositories
         {
             _entity.Add(obj);
         }
-        public async virtual Task Update(TEntity obj)
+        public virtual Task Update(TEntity obj)
         {
             _entity.Update(obj);
+            return Task.CompletedTask;
         }
 
         public void Dispose()

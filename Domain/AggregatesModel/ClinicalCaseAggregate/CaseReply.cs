@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Domain.AggregatesModel.ClinicalCaseAggregate
 {
-    public class CaseReply : Entity<Guid>
+    public class CaseReply : Entity<Guid>, IAggregateRoot
     {
         public Guid ClinicalCaseId { get; private set; }
         public Guid RequesterId { get; private set; }

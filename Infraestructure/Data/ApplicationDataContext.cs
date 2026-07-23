@@ -21,14 +21,9 @@ namespace Infraestructure.Data
         public ApplicationDataContext(DbContextOptions<ApplicationDataContext> options) : base(options)
         {
         }
-        public async Task<int> SaveChangesAsync()
+        public async Task<bool> SaveEntitiesAsync(CancellationToken cancellationToken = default)
         {
-            return await base.SaveChangesAsync();
-        }
-
-        public async Task<bool> SaveEntitiesAsync()
-        {
-            await SaveChangesAsync();
+            await SaveChangesAsync(cancellationToken);
             return true;
         }
 
@@ -48,5 +43,6 @@ namespace Infraestructure.Data
 
             modelBuilder.ApplyConfiguration(new CaseExamConfiguration());
         }
+
     }
 }
