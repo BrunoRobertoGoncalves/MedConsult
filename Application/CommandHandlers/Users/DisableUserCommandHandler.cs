@@ -1,9 +1,9 @@
-﻿using API.Application.Commands.Users;
+using Application.Commands.Users;
 using Domain.AggregatesModel.UserAggregate.Repository;
 using Domain.Exceptions;
 using MediatR;
 
-namespace API.Application.CommandHandlers.Users
+namespace Application.CommandHandlers.Users
 {
     public class DisableUserCommandHandler : IRequestHandler<DisableUserCommand, bool>
     {

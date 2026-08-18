@@ -52,7 +52,6 @@ namespace Infraestructure.EntityConfiguration
                        v => v.Split(',', StringSplitOptions.RemoveEmptyEntries)
                              .Select(s => Enum.Parse<SpecialityType>(s))
                              .ToList()
-                             .AsReadOnly()
                    )
                    .HasColumnName("Specialities")
                    .HasColumnType("text")

@@ -1,29 +1,30 @@
-﻿using API.Application.Commands.Users;
+﻿using Application.Commands.Users;
 using Domain.AggregatesModel.UserAggregate.Repository;
 using Domain.Exceptions;
 using MediatR;
 
-namespace API.Application.CommandHandlers.Users
+namespace Application.CommandHandlers.Users
 {
-    public class EnableUserCommandHandler : IRequestHandler<EnableUserCommand, bool>
+    internal class UpdateUserEmailCommandHandler : IRequestHandler<UpdateUserEmailCommand, bool>
     {
         private readonly IUserRepository _userRepository;
 
-        public EnableUserCommandHandler(IUserRepository userRepository)
+        public UpdateUserEmailCommandHandler(IUserRepository userRepository)
         {
-            _userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
+            _userRepository = userRepository;
         }
 
-        public async Task<bool> Handle(EnableUserCommand request, CancellationToken cancellationToken)
+        public async Task<bool> Handle(UpdateUserEmailCommand request, CancellationToken cancellationToken)
         {
-            if (request == null) throw new ArgumentNullException(nameof(request));
+            if (request == null)
+                throw new ArgumentNullException(nameof(request));
 
             var user = await _userRepository.GetByIdAsync(request.Id);
 
             if (user == null)
                 throw new DomainException("User not found");
 
-            user.Activate();
+            user.UpdateEmail(request.Email);
 
             var entitySaved = await _userRepository.UnitOfWork.SaveEntitiesAsync(cancellationToken).ConfigureAwait(false);
 

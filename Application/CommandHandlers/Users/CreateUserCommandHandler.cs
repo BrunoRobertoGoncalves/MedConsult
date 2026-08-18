@@ -1,11 +1,10 @@
-﻿using API.Application.Commands.Users;
+using Application.Commands.Users;
 using Domain.AggregatesModel.UserAggregate;
 using Domain.AggregatesModel.UserAggregate.Repository;
 using Domain.Exceptions;
-using Infraestructure.Repositories;
 using MediatR;
 
-namespace API.Application.CommandHandlers.Users
+namespace Application.CommandHandlers.Users
 {
     public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Guid>
     {
@@ -13,13 +12,13 @@ namespace API.Application.CommandHandlers.Users
 
         public CreateUserCommandHandler(IUserRepository userRepository)
         {
-            _userRepository = userRepository ?? throw new ArgumentNullException(nameof(UserRepository));
+            _userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
         }
 
         public async Task<Guid> Handle(CreateUserCommand request, CancellationToken cancellationToken)
         {
             if (request == null)
-                throw new ArgumentNullException(nameof(CreateUserCommand));
+                throw new ArgumentNullException(nameof(request));
 
             var users = _userRepository.GetAll();
 
@@ -30,11 +29,11 @@ namespace API.Application.CommandHandlers.Users
                 throw new DomainException($"CRM '{request.Crm}' already exists.");
 
             var user = User.CreateUser(
-                request.Name, 
-                request.Email, 
-                request.Crm, 
-                request.PasswordHash, 
-                request.Role, 
+                request.Name,
+                request.Email,
+                request.Crm,
+                request.PasswordHash,
+                request.Role,
                 request.Specialities);
 
             await _userRepository.Add(user);

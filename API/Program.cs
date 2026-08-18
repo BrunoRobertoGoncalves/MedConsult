@@ -1,3 +1,4 @@
+using Application.CommandHandlers.Users;
 using Domain.AggregatesModel.ClinicalCaseAggregate.Repository;
 using Domain.AggregatesModel.ExamAggregate.Repository;
 using Domain.AggregatesModel.UserAggregate.Repository;
@@ -11,10 +12,12 @@ builder.Services.AddControllers();
 
 builder.Services.AddOpenApi();
 
+builder.Services.AddSwaggerGen();
+
 builder.Services.AddDbContext<ApplicationDataContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Program).Assembly));
+builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(CreateUserCommandHandler).Assembly));
 
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IClinicalCaseRepository, ClinicalCaseRepository>();
@@ -25,7 +28,8 @@ var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi();
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
 
 app.UseHttpsRedirection();

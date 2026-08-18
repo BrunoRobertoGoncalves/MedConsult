@@ -1,6 +1,6 @@
-﻿using MediatR;
+using MediatR;
 
-namespace API.Application.Commands.Users
+namespace Application.Commands.Users
 {
     public class EnableUserCommand : IRequest<bool>
     {
