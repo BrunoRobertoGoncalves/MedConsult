@@ -1,5 +1,5 @@
 ﻿using Application.Commands.Users;
-using Domain.AggregatesModel.UserAggregate.Repository;
+using Application.Queries.Users;
 using Domain.Enums;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -11,12 +11,33 @@ namespace API.Controllers
     [Route("api/[controller]")]
     public class UserController : ControllerBase
     {
-        private readonly IUserRepository _userRepository;
         private readonly IMediator _mediator;
-        public UserController(IUserRepository userRepository, IMediator mediator)
+        public UserController(IMediator mediator)
         {
-            _userRepository = userRepository;
             _mediator = mediator;
+        }
+
+        [HttpGet]
+        [Route("{Id:guid}")]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
+        public async Task<IActionResult> GetById(Guid Id)
+        {
+            var user = await _mediator.Send(new GetUserByIdQuery(Id));
+
+            if (user == null)
+                return NotFound();
+
+            return Ok(user);
+        }
+
+        [HttpGet]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
+        public async Task<IActionResult> GetAll([FromQuery] bool? activeOnly = null)
+        {
+            var users = await _mediator.Send(new GetAllUsersQuery(activeOnly));
+
+            return Ok(users);
         }
 
         [HttpPost]
