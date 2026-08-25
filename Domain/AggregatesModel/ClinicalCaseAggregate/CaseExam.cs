@@ -22,10 +22,10 @@ namespace Domain.AggregatesModel.ClinicalCaseAggregate
         public static CaseExam CreateCaseExam(Guid clinicalCaseId, Guid examId)
         {
             if (clinicalCaseId == Guid.Empty)
-                throw new DomainException("ClinicalCase id cannot be null");
+                throw new DomainException("O id do caso clínico não pode ser vazio.");
 
             if (examId == Guid.Empty)
-                throw new DomainException("Exam id cannot be null");
+                throw new DomainException("O id do exame não pode ser vazio.");
 
             return new CaseExam(clinicalCaseId, examId);
         }

@@ -26,13 +26,13 @@ namespace Domain.AggregatesModel.ClinicalCaseAggregate
         public static CaseStatusHistory CreateCaseStatusHistory(Guid clinicalCaseId, CaseStatus? fromStatus, CaseStatus toStatus, Guid changedByUserId)
         {
             if (clinicalCaseId == Guid.Empty)
-                throw new DomainException("ClinicalCaseId cannot be empty.");
+                throw new DomainException("O id do caso clínico não pode ser vazio.");
             if (fromStatus.HasValue && !Enum.IsDefined(typeof(CaseStatus), fromStatus.Value))
-                throw new DomainException("Invalid FromStatus value.");
+                throw new DomainException("Status de origem inválido.");
             if (!Enum.IsDefined(typeof(CaseStatus), toStatus))
-                throw new DomainException("Invalid ToStatus value.");
+                throw new DomainException("Status de destino inválido.");
             if (changedByUserId == Guid.Empty)
-                throw new DomainException("ChangedByUserId cannot be empty.");
+                throw new DomainException("O id do usuário responsável pela mudança não pode ser vazio.");
 
             return new CaseStatusHistory(clinicalCaseId, fromStatus, toStatus, changedByUserId);
         }

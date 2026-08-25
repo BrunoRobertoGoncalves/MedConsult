@@ -35,13 +35,13 @@ namespace Domain.AggregatesModel.UserAggregate
         public static User CreateUser(string name, string email, string crm, string passwordHash, UserRole role, IReadOnlyCollection<SpecialityType> specialities)
         {
             if (string.IsNullOrWhiteSpace(name))
-                throw new DomainException("Name cannot be empty.");
+                throw new DomainException("O nome não pode ser vazio.");
             if (string.IsNullOrWhiteSpace(email))
-                throw new DomainException("Email cannot be empty.");
+                throw new DomainException("O e-mail não pode ser vazio.");
             if (string.IsNullOrWhiteSpace(crm))
-                throw new DomainException("CRM cannot be empty.");
+                throw new DomainException("O CRM não pode ser vazio.");
             if (string.IsNullOrWhiteSpace(passwordHash))
-                throw new DomainException("Password cannot be empty.");
+                throw new DomainException("A senha não pode ser vazia.");
             if (!specialities.Any())
                 throw new DomainException("O médico deve ter pelo menos uma especialidade.");
 
@@ -54,24 +54,24 @@ namespace Domain.AggregatesModel.UserAggregate
         public void Deactivate()
         {
             if (!IsActive)
-                throw new DomainException("User is already inactive.");
+                throw new DomainException("O usuário já está inativo.");
             IsActive = false;
         }
 
         public void Activate()
         {
             if (IsActive)
-                throw new DomainException("User is already active.");
+                throw new DomainException("O usuário já está ativo.");
             IsActive = true;
         }
 
         public void UpdateName(string newName)
         {
             if (string.IsNullOrWhiteSpace(newName))
-                throw new DomainException("Name cannot be empty.");
+                throw new DomainException("O nome não pode ser vazio.");
 
             if (newName.Equals(Name))
-                throw new DomainException("New name cannot be the same as the current name.");
+                throw new DomainException("O novo nome não pode ser igual ao nome atual.");
 
             Name = newName;
         }
@@ -79,9 +79,9 @@ namespace Domain.AggregatesModel.UserAggregate
         public void UpdateEmail(string newEmail)
         {
             if (string.IsNullOrWhiteSpace(newEmail))
-                throw new DomainException("Email cannot be empty.");
+                throw new DomainException("O e-mail não pode ser vazio.");
             if (newEmail.Equals(Email.Address))
-                throw new DomainException("New email cannot be the same as the current email.");
+                throw new DomainException("O novo e-mail não pode ser igual ao e-mail atual.");
 
             Email = Email.Create(newEmail);
         }
@@ -89,9 +89,9 @@ namespace Domain.AggregatesModel.UserAggregate
         public void UpdatePassword(string newPasswordHash)
         {
             if (string.IsNullOrWhiteSpace(newPasswordHash))
-                throw new DomainException("Password cannot be empty.");
+                throw new DomainException("A senha não pode ser vazia.");
             if (newPasswordHash == PasswordHash)
-                throw new DomainException("New password cannot be the same as the current password.");
+                throw new DomainException("A nova senha não pode ser igual à senha atual.");
 
             PasswordHash = newPasswordHash;
         }
@@ -99,7 +99,7 @@ namespace Domain.AggregatesModel.UserAggregate
         public void UpdateRole(UserRole newRole)
         {
             if (newRole == Role)
-                throw new DomainException("New role cannot be the same as the current role.");
+                throw new DomainException("A nova função não pode ser igual à função atual.");
 
             Role = newRole;
         }
@@ -116,6 +116,7 @@ namespace Domain.AggregatesModel.UserAggregate
         {
             if (!_specialities.Contains(speciality))
                 throw new DomainException("Especialidade não encontrada.");
+
 
             if (_specialities.Count == 1)
                 throw new DomainException("O médico deve ter pelo menos uma especialidade.");

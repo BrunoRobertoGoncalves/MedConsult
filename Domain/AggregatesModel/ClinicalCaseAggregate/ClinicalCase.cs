@@ -45,29 +45,29 @@ public class ClinicalCase : Entity<Guid>, IAggregateRoot
         Status = CaseStatus.Draft;
         CreatedAt = DateTime.UtcNow;
 
-        _statusHistory.Add(CaseStatusHistory.CreateCaseStatusHistory(Id, null, CaseStatus.Draft, requestedByUserId)); ;
+        _statusHistory.Add(CaseStatusHistory.CreateCaseStatusHistory(Id, null, CaseStatus.Draft, requestedByUserId));
     }
 
     public static ClinicalCase CreateClinicalCase(Guid requestedByUserId, string title,
         string clinicalContext, string diagnosticHypothesis, string question, SpecialityType specialityRequired)
     {
         if (requestedByUserId == Guid.Empty)
-            throw new DomainException("Requester id cannot be null");
+            throw new DomainException("O id do solicitante não pode ser vazio.");
 
         if (string.IsNullOrWhiteSpace(title))
-            throw new DomainException("Title cannot be null");
+            throw new DomainException("O título não pode ser vazio.");
 
         if (string.IsNullOrWhiteSpace(clinicalContext))
-            throw new DomainException("Clinical context cannot be null");
+            throw new DomainException("O contexto clínico não pode ser vazio.");
 
         if (string.IsNullOrWhiteSpace(diagnosticHypothesis))
-            throw new DomainException("Diagnotic Hypothesis cannot be null");
+            throw new DomainException("A hipótese diagnóstica não pode ser vazia.");
 
         if (string.IsNullOrWhiteSpace(question))
-            throw new DomainException("Questio cannot be null");
+            throw new DomainException("A pergunta não pode ser vazia.");
 
         if (!Enum.IsDefined(typeof(SpecialityType), specialityRequired))
-            throw new DomainException("Specility not valid");
+            throw new DomainException("Especialidade inválida.");
 
 
         return new ClinicalCase(requestedByUserId, title, clinicalContext, diagnosticHypothesis, question, specialityRequired);
@@ -77,10 +77,10 @@ public class ClinicalCase : Entity<Guid>, IAggregateRoot
     public void UpdateTitle(string updatedTitle)
     {
         if (Status != CaseStatus.Draft)
-            throw new DomainException("Edition is not available after draft status");
+            throw new DomainException("Edição não é permitida após o status de rascunho.");
 
         if (string.IsNullOrWhiteSpace(updatedTitle))
-            throw new DomainException("Title cannot be empty");
+            throw new DomainException("O título não pode ser vazio.");
 
         Title = updatedTitle;
     }
@@ -88,10 +88,10 @@ public class ClinicalCase : Entity<Guid>, IAggregateRoot
     public void UpdateClinicalContext(string updatedClinicalContext)
     {
         if (Status != CaseStatus.Draft)
-            throw new DomainException("Edition is not available after draft status");
+            throw new DomainException("Edição não é permitida após o status de rascunho.");
 
         if (string.IsNullOrWhiteSpace(updatedClinicalContext))
-            throw new DomainException("Clinical context cannot be null");
+            throw new DomainException("O contexto clínico não pode ser vazio.");
 
         ClinicalContext = updatedClinicalContext;
     }
@@ -99,10 +99,10 @@ public class ClinicalCase : Entity<Guid>, IAggregateRoot
     public void UpdateDiagnosticHypothesis(string updatedDiagnosticHypothesis)
     {
         if (Status != CaseStatus.Draft)
-            throw new DomainException("Edition is not available after draft status");
+            throw new DomainException("Edição não é permitida após o status de rascunho.");
 
         if (string.IsNullOrWhiteSpace(updatedDiagnosticHypothesis))
-            throw new DomainException("Diagnostic Hypothesis cannot be null");
+            throw new DomainException("A hipótese diagnóstica não pode ser vazia.");
 
         DiagnosticHypothesis = updatedDiagnosticHypothesis;
     }
@@ -110,34 +110,34 @@ public class ClinicalCase : Entity<Guid>, IAggregateRoot
     public void UpdateQuestion(string updatedQuestion)
     {
         if (Status != CaseStatus.Draft)
-            throw new DomainException("Edition is not available after draft status");
+            throw new DomainException("Edição não é permitida após o status de rascunho.");
 
         if (string.IsNullOrWhiteSpace(updatedQuestion))
-            throw new DomainException("Question cannot be null");
+            throw new DomainException("A pergunta não pode ser vazia.");
 
-        Question = updatedQuestion; 
+        Question = updatedQuestion;
     }
     #endregion
 
     #region Status transition
-    public void Submit(Guid UserId)
+    public void Submit(Guid userId)
     {
         if (Status != CaseStatus.Draft)
-            throw new DomainException("Edition is not available after draft status");
+            throw new DomainException("Edição não é permitida após o status de rascunho.");
 
         if (string.IsNullOrEmpty(Title))
-            throw new DomainException("Title cannot be empty during the submit action");
+            throw new DomainException("O título não pode ser vazio ao submeter o caso.");
 
         if(string.IsNullOrEmpty(ClinicalContext))
-            throw new DomainException("Clinical context cannot be empty during the submit action");
+            throw new DomainException("O contexto clínico não pode ser vazio ao submeter o caso.");
 
         if (string.IsNullOrEmpty(DiagnosticHypothesis))
-            throw new DomainException("Diagnostic Hypothesis cannot be empty during the submit action");
+            throw new DomainException("A hipótese diagnóstica não pode ser vazia ao submeter o caso.");
 
         if (string.IsNullOrEmpty(Question))
-            throw new DomainException("Question cannot be empty during the submit action");
+            throw new DomainException("A pergunta não pode ser vazia ao submeter o caso.");
 
-        RegisterStatusChange(Status, CaseStatus.Open, UserId);
+        RegisterStatusChange(Status, CaseStatus.Open, userId);
 
         Status = CaseStatus.Open;
     }
@@ -150,10 +150,10 @@ public class ClinicalCase : Entity<Guid>, IAggregateRoot
             throw new InvalidCaseStatusTransitionException();
 
         if (specialistId == Guid.Empty)
-            throw new DomainException("Specialist id cannot be empty.");
+            throw new DomainException("O id do especialista não pode ser vazio.");
 
         if (specialistId == RequestedByUserId)
-            throw new DomainException("Specialist cannot be the same as the requester.");
+            throw new DomainException("O especialista não pode ser o mesmo usuário que o solicitante.");
 
         AssignedSpecialistId = specialistId;
 
@@ -162,15 +162,15 @@ public class ClinicalCase : Entity<Guid>, IAggregateRoot
         Status = CaseStatus.UnderReview;
     }
 
-    public void Cancel(Guid UserId)
+    public void Cancel(Guid userId)
     {
         if (Status == CaseStatus.Cancelled)
-            throw new DomainException("Case is already cancelled.");
+            throw new DomainException("O caso já está cancelado.");
 
         if(Status != CaseStatus.Draft && Status != CaseStatus.Open)
-            throw new DomainException("Only cases with Draft or Open status can be cancelled.");
+            throw new DomainException("Somente casos com status Rascunho ou Aberto podem ser cancelados.");
 
-        RegisterStatusChange(Status, CaseStatus.Cancelled, UserId);
+        RegisterStatusChange(Status, CaseStatus.Cancelled, userId);
 
         Status = CaseStatus.Cancelled;
     }
@@ -182,22 +182,22 @@ public class ClinicalCase : Entity<Guid>, IAggregateRoot
     public void AddOpinion(Guid specialistId, string content, OpinionAgreement agreement, string conductRecommendation)
     {
         if (Status != CaseStatus.UnderReview)
-            throw new DomainException("Only cases under review can receive opinions.");
+            throw new DomainException("Somente casos em análise podem receber pareceres.");
 
         if(specialistId == Guid.Empty)
-            throw new DomainException("Specialist id cannot be empty.");
+            throw new DomainException("O id do especialista não pode ser vazio.");
 
         if(specialistId != AssignedSpecialistId)
-            throw new DomainException("Only the assigned specialist can add an opinion to this case.");
+            throw new DomainException("Somente o especialista designado pode adicionar um parecer a este caso.");
 
         if(string.IsNullOrWhiteSpace(content))
-            throw new DomainException("Opinion content cannot be empty.");
+            throw new DomainException("O conteúdo do parecer não pode ser vazio.");
 
         if(!Enum.IsDefined(typeof(OpinionAgreement), agreement))
-            throw new DomainException("Invalid opinion agreement value.");
+            throw new DomainException("Valor de concordância do parecer inválido.");
 
         if(string.IsNullOrWhiteSpace(conductRecommendation))
-            throw new DomainException("Conduct recommendation cannot be empty.");
+            throw new DomainException("A recomendação de conduta não pode ser vazia.");
 
 
         RegisterStatusChange(Status, CaseStatus.Answered, specialistId);
@@ -212,16 +212,16 @@ public class ClinicalCase : Entity<Guid>, IAggregateRoot
     public void AddReply(Guid userId, string content)
     {
         if (Status != CaseStatus.Answered)
-            throw new DomainException("Only cases with Answered status can receive replies.");
+            throw new DomainException("Somente casos com status Respondido podem receber réplicas.");
 
         if (userId == Guid.Empty)
-            throw new DomainException("User id cannot be empty.");
+            throw new DomainException("O id do usuário não pode ser vazio.");
 
         if(userId != RequestedByUserId)
-            throw new DomainException("Only the requester can add a reply to this case.");
+            throw new DomainException("Somente o solicitante pode adicionar uma réplica a este caso.");
 
         if (string.IsNullOrWhiteSpace(content))
-            throw new DomainException("Reply content cannot be empty.");
+            throw new DomainException("O conteúdo da réplica não pode ser vazio.");
 
         RegisterStatusChange(Status, CaseStatus.UnderReview, userId);
 
@@ -235,13 +235,13 @@ public class ClinicalCase : Entity<Guid>, IAggregateRoot
     public void CloseCase(Guid userId)
     {
         if (Status != CaseStatus.Answered)
-            throw new DomainException("Only cases with Answered status can be closed.");
+            throw new DomainException("Somente casos com status Respondido podem ser encerrados.");
 
         if (userId == Guid.Empty)
-            throw new DomainException("User id cannot be empty.");
+            throw new DomainException("O id do usuário não pode ser vazio.");
 
         if (userId != RequestedByUserId)
-            throw new DomainException("Only the requester can close this case.");
+            throw new DomainException("Somente o solicitante pode encerrar este caso.");
 
         RegisterStatusChange(Status, CaseStatus.Closed, userId);
         Status = CaseStatus.Closed;
@@ -253,11 +253,11 @@ public class ClinicalCase : Entity<Guid>, IAggregateRoot
     public void LinkExam(Guid examId)
     {
         if (Status != CaseStatus.Draft)
-            throw new DomainException("Edition is not available after draft status");
+            throw new DomainException("Edição não é permitida após o status de rascunho.");
         if(examId == Guid.Empty)
-            throw new DomainException("Exam id cannot be empty.");
+            throw new DomainException("O id do exame não pode ser vazio.");
         if(_caseExams.Any(ce => ce.ExamId == examId))
-            throw new DomainException("This exam is already linked to the case.");
+            throw new DomainException("Este exame já está vinculado ao caso.");
 
         _caseExams.Add(CaseExam.CreateCaseExam(Id, examId));
     }
@@ -265,14 +265,14 @@ public class ClinicalCase : Entity<Guid>, IAggregateRoot
     public void UnlinkExam(Guid examId)
     {
         if (Status != CaseStatus.Draft)
-            throw new DomainException("Edition is not available after draft status");
+            throw new DomainException("Edição não é permitida após o status de rascunho.");
         if (examId == Guid.Empty)
-            throw new DomainException("Exam id cannot be empty.");
+            throw new DomainException("O id do exame não pode ser vazio.");
 
         var caseExam = _caseExams.FirstOrDefault(ce => ce.ExamId == examId);
 
         if (caseExam == null)
-            throw new DomainException("This exam is not linked to the case.");
+            throw new DomainException("Este exame não está vinculado ao caso.");
 
         _caseExams.Remove(caseExam);
     }

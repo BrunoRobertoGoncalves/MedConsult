@@ -29,15 +29,15 @@ namespace Domain.AggregatesModel.ClinicalCaseAggregate
         public static Opinion CreateOpinion(Guid clinicalCaseId, Guid specialistId, string content, OpinionAgreement agreement, string conductRecommendation)
         {
             if (clinicalCaseId == Guid.Empty)
-                throw new DomainException("ClinicalCaseId cannot be empty.");
+                throw new DomainException("O id do caso clínico não pode ser vazio.");
             if (specialistId == Guid.Empty)
-                throw new DomainException("specialistId not found.");
+                throw new DomainException("O id do especialista não pode ser vazio.");
             if (string.IsNullOrWhiteSpace(content))
-                throw new DomainException("Content cannot be empty.");
+                throw new DomainException("O conteúdo não pode ser vazio.");
             if (!Enum.IsDefined(typeof(OpinionAgreement), agreement))
-                throw new DomainException("Invalid OpinionAgreement value.");
+                throw new DomainException("Valor de concordância do parecer inválido.");
             if(string.IsNullOrWhiteSpace(conductRecommendation))
-                throw new DomainException("ConductRecommendation cannot be empty.");
+                throw new DomainException("A recomendação de conduta não pode ser vazia.");
 
             return new Opinion(clinicalCaseId, specialistId, content, agreement, conductRecommendation);
         }

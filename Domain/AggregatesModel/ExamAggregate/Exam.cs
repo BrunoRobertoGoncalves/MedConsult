@@ -33,22 +33,22 @@ namespace Domain.AggregatesModel.ExamAggregate
         public static Exam CreateExam(Guid uploadedByUserId, string fileName, long fileSize, string storagePath, ExamType type)
         {
             if(uploadedByUserId == Guid.Empty)
-                throw new DomainException("UploadedByUserId cannot be empty.");
+                throw new DomainException("O id do usuário que enviou o exame não pode ser vazio.");
 
             if(string.IsNullOrWhiteSpace(fileName))
-                throw new DomainException("FileName cannot be empty.");
+                throw new DomainException("O nome do arquivo não pode ser vazio.");
 
             if(fileSize <= 0)
-                throw new DomainException("FileSize must be greater than zero.");
+                throw new DomainException("O tamanho do arquivo deve ser maior que zero.");
 
             if(fileSize > 52428800)
-                throw new DomainException("FileSize exceeds the maximum allowed size of 50 MB.");
+                throw new DomainException("O tamanho do arquivo excede o limite máximo de 50 MB.");
 
             if(string.IsNullOrWhiteSpace(storagePath))
-                throw new DomainException("StoragePath cannot be empty.");
+                throw new DomainException("O caminho de armazenamento não pode ser vazio.");
 
             if(Enum.IsDefined(typeof(ExamType), type) == false)
-                throw new DomainException("Invalid ExamType.");
+                throw new DomainException("Tipo de exame inválido.");
 
 
             return new Exam(uploadedByUserId, fileName, fileSize, storagePath, type);
@@ -57,7 +57,7 @@ namespace Domain.AggregatesModel.ExamAggregate
         public void UpdateFileName(string newFileName)
         {
             if(string.IsNullOrWhiteSpace(newFileName))
-                throw new DomainException("FileName cannot be empty.");
+                throw new DomainException("O nome do arquivo não pode ser vazio.");
 
             FileName = newFileName;
         }
@@ -65,7 +65,7 @@ namespace Domain.AggregatesModel.ExamAggregate
         public void StartProcessing()
         {
             if (ProcessingStatus != ExamProcessingStatus.Pending)
-                throw new DomainException("Only exams with Pending status can be processed.");
+                throw new DomainException("Somente exames com status Pendente podem ser processados.");
 
             ProcessingStatus = ExamProcessingStatus.Processing;
         }
@@ -73,13 +73,13 @@ namespace Domain.AggregatesModel.ExamAggregate
         public void CompleteProcessing(string extractedData, string alteredValues)
         {
             if (ProcessingStatus != ExamProcessingStatus.Processing)
-                throw new DomainException("Only exams with Processing status can be completed.");
+                throw new DomainException("Somente exames com status Processando podem ser concluídos.");
 
             if(string.IsNullOrWhiteSpace(extractedData))
-                throw new DomainException("ExtractedData cannot be empty.");
+                throw new DomainException("Os dados extraídos não podem ser vazios.");
 
             if(string.IsNullOrWhiteSpace(alteredValues))
-                throw new DomainException("AlteredValues cannot be empty.");
+                throw new DomainException("Os valores alterados não podem ser vazios.");
 
             ExtractedData = extractedData;
             AlteredValues = alteredValues;
@@ -90,7 +90,7 @@ namespace Domain.AggregatesModel.ExamAggregate
         public void FailProcessing()
         {
             if (ProcessingStatus != ExamProcessingStatus.Processing)
-                throw new DomainException("Only exams with Processing status can be marked as failed.");
+                throw new DomainException("Somente exames com status Processando podem ser marcados como falhos.");
 
             ProcessingStatus = ExamProcessingStatus.Failed;
         }
