@@ -22,6 +22,8 @@ namespace Infraestructure.EntityConfiguration
                 e.Property(x => x.Address)
                  .HasColumnName("Email")
                  .IsRequired();
+
+                e.HasIndex(x => x.Address).IsUnique();
             });
 
             builder.OwnsOne(u => u.Crm, c =>
@@ -29,6 +31,8 @@ namespace Infraestructure.EntityConfiguration
                 c.Property(x => x.Number)
                  .HasColumnName("Crm")
                  .IsRequired();
+
+                c.HasIndex(x => x.Number).IsUnique();
             });
 
             builder.Property(u => u.PasswordHash)
