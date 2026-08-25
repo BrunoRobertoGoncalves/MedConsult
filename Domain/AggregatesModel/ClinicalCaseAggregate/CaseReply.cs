@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Domain.AggregatesModel.ClinicalCaseAggregate
 {
-    public class CaseReply : Entity<Guid>, IAggregateRoot
+    public class CaseReply : Entity<Guid>
     {
         public Guid ClinicalCaseId { get; private set; }
         public Guid RequesterId { get; private set; }
@@ -25,13 +25,13 @@ namespace Domain.AggregatesModel.ClinicalCaseAggregate
         public static CaseReply CreateCaseReply(Guid clinicalCaseId, Guid requesterId, string? content)
         {
             if (clinicalCaseId == Guid.Empty)
-                throw new DomainException("Clinical case id cannot be empty");
+                throw new DomainException("O id do caso clínico não pode ser vazio.");
 
             if (requesterId == Guid.Empty)
-                throw new DomainException("Requester id cannot be empty");
+                throw new DomainException("O id do solicitante não pode ser vazio.");
 
             if (string.IsNullOrWhiteSpace(content))
-                throw new DomainException("Content cannot be empty");
+                throw new DomainException("O conteúdo não pode ser vazio.");
 
             return new CaseReply(clinicalCaseId, requesterId, content);
         }
