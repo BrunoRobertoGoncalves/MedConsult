@@ -20,13 +20,11 @@ namespace Application.CommandHandlers.Users
             if (request == null)
                 throw new ArgumentNullException(nameof(request));
 
-            var users = _userRepository.GetAll();
+            if (await _userRepository.ExistsByEmail(request.Email))
+                throw new DomainException($"O e-mail '{request.Email}' já está cadastrado.");
 
-            if (users.Any(f => f.Email.Address == request.Email))
-                throw new DomainException($"Email '{request.Email}' already exists.");
-
-            if (users.Any(f => f.Crm.Number == request.Crm))
-                throw new DomainException($"CRM '{request.Crm}' already exists.");
+            if (await _userRepository.ExistsByCrm(request.Crm))
+                throw new DomainException($"O CRM '{request.Crm}' já está cadastrado.");
 
             var user = User.CreateUser(
                 request.Name,
@@ -38,10 +36,7 @@ namespace Application.CommandHandlers.Users
 
             await _userRepository.Add(user);
 
-            var entitySaved = await _userRepository.UnitOfWork.SaveEntitiesAsync(cancellationToken).ConfigureAwait(false);
-
-            if (!entitySaved)
-                return Guid.Empty;
+            await _userRepository.UnitOfWork.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
 
             return user.Id;
         }

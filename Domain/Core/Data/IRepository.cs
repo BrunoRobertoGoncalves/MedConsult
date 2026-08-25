@@ -6,9 +6,8 @@
     {
         Task Add(TEntity obj);
         Task Update(TEntity obj);
-        TEntity GetById(TKey id);
         Task<TEntity> GetByIdAsync(TKey id);
         IQueryable<TEntity> GetAll();
         IUnitOfWork UnitOfWork { get; }
-    }
+     }
 }

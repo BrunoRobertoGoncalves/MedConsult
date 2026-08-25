@@ -41,11 +41,6 @@ namespace Infraestructure.Repositories
             return _entity;
         }
 
-        public virtual TEntity GetById(TKey id)
-        {
-            return _entity.Find(id);
-        }
-
         public virtual async Task<TEntity> GetByIdAsync(TKey id)
         {
             var item = await _entity.FindAsync(id);

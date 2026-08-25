@@ -22,14 +22,11 @@ namespace Application.CommandHandlers.Users
             var user = await _userRepository.GetByIdAsync(request.Id);
 
             if (user == null)
-                throw new DomainException("User not found");
+                throw new DomainException("Usuário não encontrado.");
 
             user.AddSpeciality(request.Speciality);
 
-            var entitySaved = await _userRepository.UnitOfWork.SaveEntitiesAsync(cancellationToken).ConfigureAwait(false);
-
-            if (!entitySaved)
-                return false;
+            await _userRepository.UnitOfWork.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
 
             return true;
         }

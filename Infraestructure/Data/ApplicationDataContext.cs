@@ -9,7 +9,6 @@ namespace Infraestructure.Data
 {
     public class ApplicationDataContext : DbContext, IUnitOfWork
     {
-
         public DbSet<ClinicalCase> ClinicalCases { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Exam> Exams { get; set; }
@@ -20,11 +19,6 @@ namespace Infraestructure.Data
 
         public ApplicationDataContext(DbContextOptions<ApplicationDataContext> options) : base(options)
         {
-        }
-        public async Task<bool> SaveEntitiesAsync(CancellationToken cancellationToken = default)
-        {
-            await SaveChangesAsync(cancellationToken);
-            return true;
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
