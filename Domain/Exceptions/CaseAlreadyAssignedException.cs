@@ -4,9 +4,9 @@ using System.Text;
 
 namespace Domain.Exceptions
 {
-    internal class CaseAlreadyAssignedException : Exception
+    public class CaseAlreadyAssignedException : DomainException
     {
-        public CaseAlreadyAssignedException() { }
+        public CaseAlreadyAssignedException() : base("Case is already assigned to a specialist.") { }
         public CaseAlreadyAssignedException(string message) : base(message) { }
         public CaseAlreadyAssignedException(string message, Exception innerException)
             : base(message, innerException)

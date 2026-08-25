@@ -4,9 +4,9 @@ using System.Text;
 
 namespace Domain.Exceptions
 {
-    internal class InvalidCaseStatusTransitionException : Exception
+    public class InvalidCaseStatusTransitionException : DomainException
     {
-        public InvalidCaseStatusTransitionException() { }
+        public InvalidCaseStatusTransitionException() : base("Invalid case status transition.") { }
         public InvalidCaseStatusTransitionException(string message) : base(message) { }
         public InvalidCaseStatusTransitionException(string message, Exception innerException)
             : base(message, innerException)
